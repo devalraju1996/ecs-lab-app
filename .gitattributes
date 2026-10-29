@@ -1,0 +1,5 @@
+# Keep Linux line endings (LF) even when committed from Windows,
+# so the Dockerfile and scripts behave the same inside the container.
+* text=auto eol=lf
+*.png binary
+*.jpg binary

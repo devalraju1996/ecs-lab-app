@@ -1,0 +1,73 @@
+{
+  "family": "ecs-lab-fargate",
+  "requiresCompatibilities": ["FARGATE"],
+  "networkMode": "awsvpc",
+  "executionRoleArn": "arn:aws:iam::700017004782:role/ecsTaskExecutionRole",
+  "cpu": "256",
+  "memory": "512",
+  "runtimePlatform": {
+    "operatingSystemFamily": "LINUX",
+    "cpuArchitecture": "X86_64"
+  },
+  "ephemeralStorage": {
+    "sizeInGiB": 21
+  },
+  "containerDefinitions": [
+    {
+      "name": "web",
+      "image": "devalraju1996/ecs-lab-app:v1",
+      "essential": true,
+      "portMappings": [
+        {
+          "name": "web-3000-tcp",
+          "containerPort": 3000,
+          "protocol": "tcp",
+          "appProtocol": "http"
+        }
+      ],
+      "environment": [
+        { "name": "APP_ENV", "value": "ecs-fargate" },
+        { "name": "APP_VERSION", "value": "v1" },
+        { "name": "APP_COLOR", "value": "#9333ea" },
+        { "name": "DATA_DIR", "value": "/data" }
+      ],
+      "secrets": [
+        {
+          "name": "SECRET_MESSAGE",
+          "valueFrom": "PASTE-YOUR-SECRET-ARN-HERE"
+        }
+      ],
+      "healthCheck": {
+        "command": ["CMD-SHELL", "wget -q -O /dev/null http://localhost:3000/health || exit 1"],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 15
+      },
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/ecs-lab",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "web"
+        }
+      },
+      "mountPoints": [
+        {
+          "sourceVolume": "lab-data",
+          "containerPath": "/data",
+          "readOnly": false
+        }
+      ],
+      "stopTimeout": 30
+    }
+  ],
+  "volumes": [
+    {
+      "name": "lab-data"
+    }
+  ],
+  "tags": [
+    { "key": "project", "value": "ecs-lab" }
+  ]
+}

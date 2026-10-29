@@ -1,0 +1,24 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ReadDockerHubLoginAndAppSecret",
+      "Effect": "Allow",
+      "Action": "secretsmanager:GetSecretValue",
+      "Resource": [
+        "PASTE-DOCKERHUB-SECRET-ARN-HERE",
+        "PASTE-MESSAGE-SECRET-ARN-HERE"
+      ]
+    },
+    {
+      "Sid": "WriteLogs",
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Resource": "arn:aws:logs:us-east-1:700017004782:log-group:/ecs/ecs-lab*"
+    }
+  ]
+}
